@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coders World Portal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #f6f9fc;
+      color: #0b1a33;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* ---------- WELCOME SCREEN ---------- */
+    #welcomeScreen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(145deg, #0b1a33 0%, #1a3a6a 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      text-align: center;
+      padding: 2rem;
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    #welcomeScreen.hide {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    .welcome-logo {
+      width: 130px;
+      height: 130px;
+      margin-bottom: 28px;
+      filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.5));
+      animation: floatGlow 3s infinite alternate ease-in-out;
+    }
+    @keyframes floatGlow {
+      0% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 20px rgba(59,130,246,0.3)); }
+      100% { transform: translateY(-8px) scale(1.02); filter: drop-shadow(0 0 50px rgba(59,130,246,0.7)); }
+    }
+
+    .welcome-title {
+      font-size: 3.6rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 2px;
+      margin-bottom: 0.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+    .welcome-title .highlight {
+      background: linear-gradient(135deg, #93c5fd, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .typing-cursor {
+      display: inline-block;
+      width: 4px;
+      height: 1.2em;
+      background: #60a5fa;
+      margin-left: 4px;
+      animation: blink 0.8s step-end infinite;
+      vertical-align: text-bottom;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .welcome-sub {
+      color: #94a3b8;
+      letter-spacing: 6px;
+      font-size: 1.1rem;
+      margin-bottom: 36px;
+    }
+
+    .btn-continue {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      padding: 18px 56px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border-radius: 60px;
+      cursor: pointer;
+      box-shadow: 0 12px 40px rgba(37, 99, 235, 0.5);
+      transition: all 0.3s ease;
+      letter-spacing: 2px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-continue:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 18px 50px rgba(37, 99, 235, 0.65);
+    }
+    .btn-continue i {
+      font-size: 1.1rem;
+      transition: transform 0.3s;
+    }
+    .btn-continue:hover i {
+      transform: translateX(6px);
+    }
+
+    /* ---------- MAIN PAGE ---------- */
+    #mainPage {
+      display: none;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 40px;
+      padding: 40px 40px 0;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+      animation: fadeUp 0.7s ease;
+    }
+    #mainPage.show {
+      display: block;
+    }
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(40px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ----- HEADER ----- */
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #eef2f6;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .main-header .left h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #0b1a33;
+      letter-spacing: 1px;
+    }
+    .main-header .left h1 span {
+      color: #2563eb;
+    }
+    .main-header .left .tagline {
+      font-size: 0.85rem;
+      color: #64748b;
+      letter-spacing: 4px;
+      margin-top: 2px;
+    }
+    .main-header .right-logo {
+      width: 75px;
+      height: 75px;
+      filter: drop-shadow(0 4px 16px rgba(37, 99, 235, 0.2));
+    }
+
+    /* ----- SECTION 1: FLOAT ----- */
+    .section-float {
+      background: #fafcff;
+      border-radius: 28px;
+      padding: 32px 34px;
+      margin-bottom: 48px;
+      overflow: hidden;
+      border: 1px solid #eef2f6;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+    }
+    .section-float h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b1a33;
+      margin-bottom: 18px;
+    }
+    .section-float h2 i {
+      color: #2563eb;
+      margin-right: 12px;
+    }
+
+    .float-logo {
+      float: right;
+      width: 150px;
+      height: 150px;
+      margin: 0 0 18px 28px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, #1e3a8a, #0b1a33);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      padding: 10px;
+    }
+    .float-logo svg {
+      width: 90%;
+      height: 90%;
+      filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.4));
+    }
+
+    .section-float p {
+      font-size: 1.08rem;
+      line-height: 1.8;
+      color: #1e2f4e;
+      margin-bottom: 18px;
+    }
+    .section-float .highlight-sentence {
+      display: inline-block;
+      background: #eef6ff;
+      padding: 10px 24px;
+      border-radius: 40px;
+      letter-spacing: 2.5px;
+      text-shadow: 0 2px 12px rgba(37, 99, 235, 0.15);
+      font-weight: 500;
+      color: #0b1a33;
+      border-left: 5px solid #2563eb;
+      text-transform: capitalize;
+      margin-top: 4px;
+    }
+
+    /* ----- SECTION 2: TABLE ----- */
+    .section-table {
+      background: #fafcff;
+      border-radius: 28px;
+      padding: 32px 34px;
+      margin-bottom: 48px;
+      border: 1px solid #eef2f6;
+    }
+    .section-table h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b1a33;
+      margin-bottom: 4px;
+    }
+    .section-table h2 i {
+      color: #2563eb;
+      margin-right: 12px;
+    }
+    .section-table .sub-head {
+      color: #64748b;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+    .section-table .sub-head i {
+      color: #2563eb;
+      margin-right: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.96rem;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+    }
+    th {
+      background: #0b1a33;
+      color: #fff;
+      padding: 16px 20px;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    td {
+      padding: 16px 20px;
+      border-bottom: 1px solid #e9edf2;
+      color: #1e2f4e;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background: #f4f8ff;
+    }
+    .year-badge {
+      background: #2563eb;
+      color: #fff;
+      padding: 4px 16px;
+      border-radius: 40px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: inline-block;
+      letter-spacing: 0.5px;
+    }
+
+    /* ----- SECTION 3: REGISTRATION FORM ----- */
+    .section-form {
+      background: #fafcff;
+      border-radius: 28px;
+      padding: 32px 34px;
+      border: 1px solid #eef2f6;
+    }
+    .section-form h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b1a33;
+      margin-bottom: 4px;
+    }
+    .section-form h2 i {
+      color: #2563eb;
+      margin-right: 12px;
+    }
+    .section-form .sub-head {
+      color: #64748b;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      margin-bottom: 28px;
+      font-weight: 500;
+    }
+    .section-form .sub-head i {
+      color: #2563eb;
+      margin-right: 8px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px 32px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #1e2f4e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .form-group label i {
+      color: #2563eb;
+      width: 18px;
+    }
+    .form-group input,
+    .form-group select {
+      padding: 12px 18px;
+      border-radius: 40px;
+      border: 1.5px solid #dce2ea;
+      font-size: 0.95rem;
+      background: #ffffff;
+      transition: 0.2s;
+      width: 100%;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 28px;
+      padding-top: 6px;
+      flex-wrap: wrap;
+    }
+    .radio-group label {
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .radio-group input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #2563eb;
+    }
+
+    .form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 18px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-submit {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      padding: 14px 48px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 6px 24px rgba(37, 99, 235, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 36px rgba(37, 99, 235, 0.4);
+    }
+    .btn-clear {
+      background: #e9edf2;
+      color: #1e2f4e;
+      border: none;
+      padding: 14px 48px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-clear:hover {
+      background: #dce2ea;
+      transform: translateY(-2px);
+    }
+
+    /* ===== ABOUT SECTION (hidden, shown on click) ===== */
+    #aboutSection {
+      display: none;
+      background: #fafcff;
+      border-radius: 28px;
+      padding: 32px 34px;
+      margin: 48px 0;
+      border: 1px solid #eef2f6;
+      animation: fadeUp 0.5s ease;
+    }
+    #aboutSection.show {
+      display: block;
+    }
+    #aboutSection h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b1a33;
+      margin-bottom: 16px;
+    }
+    #aboutSection h2 i {
+      color: #2563eb;
+      margin-right: 12px;
+    }
+    #aboutSection p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #1e2f4e;
+      max-width: 900px;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: #0b1a33;
+      border-radius: 28px 28px 0 0;
+      padding: 40px 40px 20px;
+      margin-top: 48px;
+      color: #cbd5e1;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 30px;
+    }
+    .footer-grid h4 {
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+    }
+    .footer-grid h4 i {
+      color: #3b82f6;
+      margin-right: 10px;
+    }
+
+    .footer-grid .about-text {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #94a3b8;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .footer-grid .about-text:hover {
+      color: #60a5fa;
+    }
+
+    .footer-grid .quick-links a {
+      display: block;
+      color: #94a3b8;
+      text-decoration: none;
+      padding: 6px 0;
+      font-size: 0.95rem;
+      transition: color 0.3s, padding-left 0.3s;
+      cursor: pointer;
+    }
+    .footer-grid .quick-links a:hover {
+      color: #60a5fa;
+      padding-left: 8px;
+    }
+
+    .footer-grid .contact-info p {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: #94a3b8;
+      padding: 6px 0;
+    }
+    .footer-grid .contact-info p i {
+      width: 22px;
+      color: #3b82f6;
+      font-size: 1.1rem;
+    }
+
+    /* Social Icons - Real Colors on Hover */
+    .social-footer {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      flex-wrap: wrap;
+    }
+    .social-footer a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      color: #94a3b8;
+      font-size: 1.3rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    .social-footer a:hover {
+      transform: translateY(-5px) scale(1.08);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+    /* YouTube */
+    .social-footer a.youtube:hover {
+      background: #ff0000;
+      color: #fff;
+    }
+    /* Instagram */
+    .social-footer a.instagram:hover {
+      background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+      color: #fff;
+    }
+    /* Twitter */
+    .social-footer a.twitter:hover {
+      background: #1da1f2;
+      color: #fff;
+    }
+    /* Facebook */
+    .social-footer a.facebook:hover {
+      background: #1877f2;
+      color: #fff;
+    }
+
+    .footer-bottom-text {
+      text-align: center;
+      padding-top: 20px;
+      color: #64748b;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      margin-top: 16px;
+    }
+    .footer-bottom-text i {
+      color: #3b82f6;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 850px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+    }
+    @media (max-width: 700px) {
+      .welcome-title {
+        font-size: 2.6rem;
+      }
+      .main-header .left h1 {
+        font-size: 1.7rem;
+      }
+      .float-logo {
+        float: none;
+        margin: 0 auto 20px;
+        width: 130px;
+        height: 130px;
+      }
+      .section-float,
+      .section-table,
+      .section-form,
+      #aboutSection {
+        padding: 24px 20px;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      #mainPage {
+        padding: 24px 18px 0;
+      }
+      .footer {
+        padding: 30px 20px 16px;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+    @media (max-width: 500px) {
+      .welcome-title {
+        font-size: 2rem;
+      }
+      .btn-continue {
+        padding: 14px 36px;
+        font-size: 1rem;
+      }
+      .main-header {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+      .main-header .right-logo {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== WELCOME SCREEN ========== -->
+  <div id="welcomeScreen">
+    <div class="welcome-logo">
+      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="60" r="56" fill="#0b1a33" stroke="#2563eb" stroke-width="3" />
+        <circle cx="60" cy="60" r="48" fill="none" stroke="#1e3a8a" stroke-width="2" stroke-dasharray="4 6" />
+        <text x="60" y="44" text-anchor="middle" font-family="'Courier New', monospace" font-size="22" font-weight="800" fill="#93c5fd">&#123;/&#125;</text>
+        <text x="60" y="62" text-anchor="middle" font-family="'Courier New', monospace" font-size="10" font-weight="700" fill="#60a5fa" letter-spacing="2">CODE=RS</text>
+        <text x="60" y="82" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" font-weight="700" fill="#ffffff" letter-spacing="3">WORLD</text>
+        <circle cx="36" cy="50" r="2" fill="#3b82f6" opacity="0.6" />
+        <circle cx="84" cy="50" r="2" fill="#3b82f6" opacity="0.6" />
+        <circle cx="60" cy="92" r="2" fill="#3b82f6" opacity="0.4" />
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#3b82f6" stroke-width="0.5" opacity="0.3" />
+      </svg>
+    </div>
+
+    <div class="welcome-title">
+      Welcome to <span class="highlight">Coders World</span> Portal
+      <span class="typing-cursor" id="typingCursor"></span>
+    </div>
+    <p class="welcome-sub">CODE • LEARN • GROW</p>
+    <button class="btn-continue" id="continueBtn">
+      Continue <i class="fas fa-arrow-right"></i>
+    </button>
+  </div>
+
+  <!-- ========== MAIN PAGE ========== -->
+  <div id="mainPage">
+
+    <!-- HEADER -->
+    <header class="main-header">
+      <div class="left">
+        <h1><span>Coders</span> World Portal</h1>
+        <div class="tagline">CODE • LEARN • GROW</div>
+      </div>
+      <div class="right-logo">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="60" r="56" fill="#0b1a33" stroke="#2563eb" stroke-width="3" />
+          <circle cx="60" cy="60" r="48" fill="none" stroke="#1e3a8a" stroke-width="2" stroke-dasharray="4 6" />
+          <text x="60" y="44" text-anchor="middle" font-family="'Courier New', monospace" font-size="22" font-weight="800" fill="#93c5fd">&#123;/&#125;</text>
+          <text x="60" y="62" text-anchor="middle" font-family="'Courier New', monospace" font-size="10" font-weight="700" fill="#60a5fa" letter-spacing="2">CODE=RS</text>
+          <text x="60" y="82" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" font-weight="700" fill="#ffffff" letter-spacing="3">WORLD</text>
+          <circle cx="36" cy="50" r="2" fill="#3b82f6" opacity="0.6" />
+          <circle cx="84" cy="50" r="2" fill="#3b82f6" opacity="0.6" />
+          <circle cx="60" cy="92" r="2" fill="#3b82f6" opacity="0.4" />
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#3b82f6" stroke-width="0.5" opacity="0.3" />
+        </svg>
+      </div>
+    </header>
+
+    <!-- SECTION 1: FLOAT -->
+    <section class="section-float">
+      <h2><i class="fas fa-align-left"></i> Understanding Text Formatting &amp; Floats</h2>
+      <div class="float-logo">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="60" r="56" fill="#0b1a33" stroke="#2563eb" stroke-width="3" />
+          <circle cx="60" cy="60" r="48" fill="none" stroke="#1e3a8a" stroke-width="2" stroke-dasharray="4 6" />
+          <text x="60" y="44" text-anchor="middle" font-family="'Courier New', monospace" font-size="22" font-weight="800" fill="#93c5fd">&#123;/&#125;</text>
+          <text x="60" y="62" text-anchor="middle" font-family="'Courier New', monospace" font-size="10" font-weight="700" fill="#60a5fa" letter-spacing="2">CODE=RS</text>
+          <text x="60" y="82" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" font-weight="700" fill="#ffffff" letter-spacing="3">WORLD</text>
+          <circle cx="36" cy="50" r="2" fill="#3b82f6" opacity="0.6" />
+          <circle cx="84" cy="50" r="2" fill="#3b82f6" opacity="0.6" />
+          <circle cx="60" cy="92" r="2" fill="#3b82f6" opacity="0.4" />
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#3b82f6" stroke-width="0.5" opacity="0.3" />
+        </svg>
+      </div>
+      <p>This section demonstrates text alignment, transformation, and word spacing. The image beside this text uses the CSS Float property. As specified in the notes, Floats push an element to the left or right, allowing the text flow to gracefully wrap around it.</p>
+      <p class="highlight-sentence">This Specific Sentence Showcases Custom Letter-Spacing, Text-Shadows, And A Capitalization Transformation.</p>
+    </section>
+
+    <!-- SECTION 2: TABLE -->
+    <section class="section-table">
+      <h2><i class="fas fa-table"></i> Course Module and History</h2>
+      <div class="sub-head"><i class="fas fa-clock"></i> CSS Evolution Timeline</div>
+      <table>
+        <thead>
+          <tr><th>Year</th><th>Specification</th><th>Key Feature</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="year-badge">1994</span></td><td>The Proposal</td><td>First conceptualized by Håkon Wium Lie at CERN</td></tr>
+          <tr><td><span class="year-badge">1996</span></td><td>CSS1</td><td>W3C official release supporting fonts, colors and margins</td></tr>
+          <tr><td><span class="year-badge">1998</span></td><td>CSS2</td><td>Added positioning, z-index and media types</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECTION 3: REGISTRATION FORM -->
+    <section class="section-form">
+      <h2><i class="fas fa-user-plus"></i> Registration Form</h2>
+      <div class="sub-head"><i class="fas fa-id-card"></i> User Account Details</div>
+      <form id="registerForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> Full Name</label>
+            <input type="text" id="fullName" placeholder="Name" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> Gmail Address</label>
+            <input type="email" id="email" placeholder="mail" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> Password</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-venus-mars"></i> Gender</label>
+            <div class="radio-group">
+              <label><input type="radio" name="gender" value="Male" checked> Male</label>
+              <label><input type="radio" name="gender" value="Female"> Female</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label><i class="fas fa-graduation-cap"></i> Higher Qualification</label>
+            <select id="qualification">
+              <option>10th</option><option>12th</option><option>Batchlor's</option><option>Master's Degree</option><option>PhD</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-submit"><i class="fas fa-check"></i> Submit Details</button>
+            <button type="reset" class="btn-clear"><i class="fas fa-undo-alt"></i> Clear Form</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===== ABOUT SECTION (hidden by default, shown on click) ===== -->
+    <div id="aboutSection">
+      <h2><i class="fas fa-info-circle"></i> About Coders World Portal</h2>
+      <p>
+        <strong>Coders World Portal</strong> is a premier platform designed for aspiring developers and tech enthusiasts.
+        We provide high-quality educational content on <strong>HTML, CSS, JavaScript</strong>, and modern web technologies.
+        Our mission is to empower learners with practical skills, real-world projects, and a supportive community.
+        Whether you're starting your coding journey or advancing your career, we're here to help you
+        <strong>CODE • LEARN • GROW</strong>.
+      </p>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+      <div class="footer-grid">
+
+        <!-- Column 1: About Us -->
+        <div>
+          <h4><i class="fas fa-info-circle"></i> About Us</h4>
+          <p class="about-text" id="aboutUsTrigger">
+            Coders World Portal is a premium coding education platform. We help you master HTML, CSS, JavaScript &amp; more.
+            <span style="color:#3b82f6;display:inline-block;margin-top:6px;">Click here to read more →</span>
+          </p>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div>
+          <h4><i class="fas fa-link"></i> Quick Links</h4>
+          <div class="quick-links">
+            <a onclick="document.getElementById('mainPage').scrollIntoView({behavior:'smooth',block:'start'})">🏠 Home</a>
+            <a id="quickAboutTrigger">📖 Initiatives</a>
+            <a onclick="document.getElementById('mainPage').scrollIntoView({behavior:'smooth',block:'start'})">💬 Discussion</a>
+            <a onclick="document.querySelector('.footer').scrollIntoView({behavior:'smooth',block:'start'})">📞 Contact Us</a>
+          </div>
+        </div>
+
+        <!-- Column 3: Contact Info -->
+        <div>
+          <h4><i class="fas fa-address-card"></i> Contact Info</h4>
+          <div class="contact-info">
+            <p><i class="fas fa-phone-alt"></i> +91 9006744604</p>
+            <p><i class="fas fa-envelope"></i> guptaabhishek63501@gmail.com</p>
+            <p><i class="fas fa-map-marker-alt"></i> Murauwatpur, Mahnar, Vaishali, India</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Social Media Icons -->
+      <div class="social-footer">
+        <a href="#" class="youtube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+      </div>
+
+      <div class="footer-bottom-text">
+        <p><i class="fas fa-code"></i> Coders World Portal &bull; CODE &bull; LEARN &bull; GROW</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <script>
+    (function() {
+      // ---------- WELCOME SCREEN + TYPING ----------
+      const welcomeScreen = document.getElementById('welcomeScreen');
+      const mainPage = document.getElementById('mainPage');
+      const continueBtn = document.getElementById('continueBtn');
+
+      const fullText = "Welcome to Coders World Portal";
+      let index = 0;
+      const welcomeTitle = document.querySelector('.welcome-title');
+
+      function typeEffect() {
+        if (index < fullText.length) {
+          const typedSoFar = fullText.substring(0, index + 1);
+          welcomeTitle.innerHTML = `${typedSoFar}<span class="typing-cursor" id="typingCursor"></span>`;
+          index++;
+          setTimeout(typeEffect, 65);
+        } else {
+          welcomeTitle.innerHTML = `
+            Welcome to <span class="highlight">Coders World</span> Portal
+            <span class="typing-cursor" id="typingCursor" style="opacity:0;"></span>
+          `;
+          continueBtn.style.opacity = '1';
+          continueBtn.style.pointerEvents = 'auto';
+        }
+      }
+
+      setTimeout(typeEffect, 400);
+
+      continueBtn.style.opacity = '0';
+      continueBtn.style.pointerEvents = 'none';
+
+      continueBtn.addEventListener('click', function() {
+        welcomeScreen.classList.add('hide');
+        mainPage.classList.add('show');
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 300);
+      });
+
+      // ---------- ABOUT US TOGGLE ----------
+      const aboutSection = document.getElementById('aboutSection');
+      const aboutTrigger1 = document.getElementById('aboutUsTrigger');
+      const aboutTrigger2 = document.getElementById('quickAboutTrigger');
+
+      function toggleAbout() {
+        aboutSection.classList.toggle('show');
+        if (aboutSection.classList.contains('show')) {
+          aboutSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+
+      aboutTrigger1.addEventListener('click', toggleAbout);
+      aboutTrigger2.addEventListener('click', toggleAbout);
+
+      // ---------- FORM SUBMIT ----------
+      const form = document.getElementById('registerForm');
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const pass = document.getElementById('password').value.trim();
+
+        if (name.length < 2) {
+          alert('Please enter your Full Name.');
+          return;
+        }
+        if (!email.includes('@') || !email.includes('.')) {
+          alert('Please enter a valid Gmail address.');
+          return;
+        }
+        if (pass.length < 4) {
+          alert('Password must be at least 4 characters.');
+          return;
+        }
+        alert('✅ Registration successful! Welcome to Coders World Portal.');
+      });
+
+    })();
+  </script>
+</body>
+</html>
